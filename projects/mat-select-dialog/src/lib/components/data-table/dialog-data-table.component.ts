@@ -50,20 +50,35 @@ export class DialogDataTableComponent implements AfterViewInit {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) private _dataSource: MatSelectDialogDataSource<any>
-    ) { }
-
-    ngAfterViewInit(): void {
+    ) {
         if (this.pagingEnabled && this.pagingMode === 'local') {
-        this._localPagingDataSource = new MatTableDataSource<any>(this._dataSource.data);
-        this._localPagingDataSource.paginator = this.paginator;
+            this._localPagingDataSource = new MatTableDataSource<any>(this._dataSource.data);
         }
     }
 
+    ngAfterViewInit(): void {
+        if (this.pagingEnabled && this.pagingMode === 'local') {
+            this._localPagingDataSource.paginator = this.paginator;
+        }
+    }
+
+    private _filterEmitterAntiFloodTimeout: any = undefined;
     applyFilter(event: Event): void {
         this.filterText = (event.target as HTMLInputElement).value;
-        if (this.pagingEnabled && this.pagingMode === 'remote') {
+
+        // emit output but not on every key presses.
+        if (this._filterEmitterAntiFloodTimeout) {
+            clearTimeout(this._filterEmitterAntiFloodTimeout);
+        }
+        this._filterEmitterAntiFloodTimeout = setTimeout(() => {
+            
             this.filter.emit(this.filterText);
-        } else {
+
+            clearTimeout(this._filterEmitterAntiFloodTimeout);
+            this._filterEmitterAntiFloodTimeout = undefined;
+        }, 200);
+
+        if (!this.pagingEnabled || this.pagingMode === 'local') {
             this._localPagingDataSource.filter = this.filterText.trim().toLowerCase();
 
             if (this._localPagingDataSource.paginator) {

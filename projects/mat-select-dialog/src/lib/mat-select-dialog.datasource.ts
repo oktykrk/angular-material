@@ -63,8 +63,6 @@ export class MatSelectDialogDataSource<T> {
                 this._pageSize = options.paging.pageSize || this._pageSize;
 
                 this._totalCount = options.paging.mode === 'remote' ? options.paging.totalCount || 0 : options.data.length;
-
-                alert(this._totalCount )
             }
         }
     }
