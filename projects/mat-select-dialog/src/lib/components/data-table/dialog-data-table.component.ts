@@ -47,7 +47,7 @@ export class DialogDataTableComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        if (this.pagingEnabled) {
+        if (this.pagingEnabled && this._dataSource.pagingMode === 'local') {
             this._tableDataSource.paginator = this.paginator;
         }
     }

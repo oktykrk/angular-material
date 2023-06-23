@@ -3,10 +3,11 @@ interface IMatSelectDialogDataSourceOptions<T> {
     displayedColumns: Array<string>,
     paging?: {
         enabled?: boolean,
-        pageCounts?: Array<number>,
+        mode?: 'local' | 'remote',
+        pageSizeOptions?: Array<number>,
         pageIndex?: number,
-        pageCount?: number,
-        totalCount?: number | 'auto'
+        pageSize?: number,
+        totalCount?: number
     }
 }
 export class MatSelectDialogDataSource<T> {
@@ -14,17 +15,21 @@ export class MatSelectDialogDataSource<T> {
     public get pagingEnabled(): boolean {
         return this._pagingEnabled;
     }
+    private _pagingMode: 'local' | 'remote' = 'local';
+    public get pagingMode(): 'local' | 'remote' {
+        return this._pagingMode;
+    }
     private _pageIndex: number = 0;
     public get pageIndex(): number {
         return this._pageIndex;
     }
-    private _pageCount: number = 10;
+    private _pageSize: number = 10;
     public get pageSize(): number {
-        return this._pageCount;
+        return this._pageSize;
     }
-    private _pageCounts: Array<number> = [5, 10, 15];
+    private _pageSizeOptions: Array<number> = [5, 10, 15];
     public get pageSizeOptions(): Array<number> {
-        return this._pageCounts;
+        return this._pageSizeOptions;
     }
     private _totalCount: number = 10;
     public get totalCount(): number {
@@ -51,13 +56,20 @@ export class MatSelectDialogDataSource<T> {
         } else {
             if (options.paging.enabled !== undefined && options.paging.enabled === true) {
                 this._pagingEnabled = true;
+                this._pagingMode = options.paging.mode || this._pagingMode;
 
                 this._pageIndex = options.paging.pageIndex || this._pageIndex;
-                this._pageCounts = options.paging.pageCounts || this._pageCounts;
-                this._pageCount = options.paging.pageCount || this._pageCount;
-                this._totalCount = !options.paging.totalCount || options.paging.totalCount === 'auto' ? options.data.length : options.paging.totalCount as number;
+                this._pageSizeOptions = options.paging.pageSizeOptions || this._pageSizeOptions;
+                this._pageSize = options.paging.pageSize || this._pageSize;
+
+                this._totalCount = options.paging.mode === 'remote' ? options.paging.totalCount || 0 : options.data.length;
             }
         }
 
+    }
+
+    /** */
+    public setData(data: Array<T>): void {
+        this._data = data;
     }
 }
