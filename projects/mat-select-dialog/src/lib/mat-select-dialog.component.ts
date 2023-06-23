@@ -7,9 +7,9 @@ import { MatSelectDialogService } from './mat-select-dialog.service';
 @Component({
   selector: 'mat-select-dialog',
   template: `
-    <mat-form-field [appearance]="appearance" style="flex: 1">
+    <mat-form-field [appearance]="appearance" style="flex: 1" (click)="onInputClick()">
       <mat-label>{{label}}</mat-label>
-      <input readonly matInput [placeholder]="placeholder" (click)="onInputClick()">
+      <input readonly matInput [placeholder]="placeholder">
       <mat-icon *ngIf="suffix" matSuffix>{{suffix}}</mat-icon>
       <mat-icon *ngIf="prefix" matPrefix>{{prefix}}</mat-icon>
       <mat-hint *ngIf="hint">{{hint}}</mat-hint>
