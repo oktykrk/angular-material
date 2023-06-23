@@ -1,7 +1,8 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectDialogDataSource } from '../../mat-select-dialog.datasource';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
     selector: 'lib-dialog-data-table',
@@ -9,7 +10,9 @@ import { MatTableDataSource } from '@angular/material/table';
     styleUrls: ['dialog-data-table.component.scss']
 })
 
-export class DialogDataTableComponent {
+export class DialogDataTableComponent implements AfterViewInit {
+    @ViewChild(MatPaginator) paginator!: MatPaginator;
+
     private _tableDataSource!: MatTableDataSource<any>;
     public get tableDataSource(): MatTableDataSource<any> {
         return this._tableDataSource;
@@ -43,7 +46,13 @@ export class DialogDataTableComponent {
         this._tableDataSource = new MatTableDataSource<any>(_dataSource.data);
     }
 
-    applyFilter(event: Event) {
+    ngAfterViewInit(): void {
+        if (this.pagingEnabled) {
+            this._tableDataSource.paginator = this.paginator;
+        }
+    }
+
+    applyFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value;
         this._tableDataSource.filter = filterValue.trim().toLowerCase();
 

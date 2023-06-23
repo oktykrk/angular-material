@@ -8,7 +8,7 @@
 
     <ng-container matColumnDef="filter__">
         <th mat-header-cell *matHeaderCellDef [attr.colspan]="displayedColumns.length">
-            <div style="padding-top: 1rem;">
+            <div style="padding: 1rem 0;">
                 <mat-form-field appearance="outline" style="width: 100%">
                     <mat-label>Filter</mat-label>
                     <input [maxLength]="50" matInput (keyup)="applyFilter($event)" placeholder="Type here to filter..">
@@ -18,8 +18,17 @@
         </th>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['filter__']"></tr>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <ng-container matColumnDef="paginator__">
+        <th mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
+            <div>
+                <mat-paginator #paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                    [length]="totalCount"></mat-paginator>
+            </div>
+        </th>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['filter__']; sticky: true"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-header-row>
         <th [attr.colspan]="displayedColumns.length"></th>
     </tr>
@@ -31,10 +40,10 @@
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">
             <div style="padding: 1rem;">
                 <span *ngIf="!tableDataSource.filter">No data found</span>
-            <span *ngIf="tableDataSource.filter">No data matching the filter "{{tableDataSource.filter}}"</span>
+                <span *ngIf="tableDataSource.filter">No data matching the filter "{{tableDataSource.filter}}"</span>
             </div>
         </td>
     </tr>
-</table>
 
-<mat-paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" [length]="totalCount"></mat-paginator>
+    <tr mat-footer-row *matFooterRowDef="pagingEnabled ? ['paginator__'] : []; sticky: true"></tr>
+</table>
