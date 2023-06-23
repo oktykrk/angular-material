@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="tableDataSource" matSort>
+<table mat-table [dataSource]="pagingEnabled && pagingMode === 'remote' ? data : localPagingDataSource">
 
     <!-- Iterate columns -->
     <ng-container *ngFor="let col of displayedColumns" [matColumnDef]="col">
@@ -22,7 +22,7 @@
         <th mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
             <div>
                 <mat-paginator #paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-                    [length]="totalCount"></mat-paginator>
+                    [length]="totalCount" (page)="onPage($event)"></mat-paginator>
             </div>
         </th>
     </ng-container>
@@ -39,8 +39,8 @@
     <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" [attr.colspan]="displayedColumns.length">
             <div style="padding: 1rem;">
-                <span *ngIf="!tableDataSource.filter">No data found</span>
-                <span *ngIf="tableDataSource.filter">No data matching the filter "{{tableDataSource.filter}}"</span>
+                <span *ngIf="!filterText">No data found</span>
+                <span *ngIf="filterText">No data matching the filter "{{filterText}}"</span>
             </div>
         </td>
     </tr>

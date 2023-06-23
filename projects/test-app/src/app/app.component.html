@@ -1,1 +1,1 @@
-<mat-select-dialog [dataSource]="selectDataSource"></mat-select-dialog>
+<mat-select-dialog [dataSource]="selectDataSource" (page)="onPage($event)" (filter)="onFilter($event)"></mat-select-dialog>

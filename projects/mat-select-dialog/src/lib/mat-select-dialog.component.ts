@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { MatSelectDialogDataSource } from './mat-select-dialog.datasource';
 import { MatSelectDialogService } from './mat-select-dialog.service';
+import { Subscription } from 'rxjs';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'mat-select-dialog',
@@ -22,23 +24,36 @@ import { MatSelectDialogService } from './mat-select-dialog.service';
     }
   `]
 })
-export class MatSelectDialogComponent {
+export class MatSelectDialogComponent implements OnInit, OnDestroy {
   @Input() appearance: MatFormFieldAppearance = 'outline';
   @Input() label: string = 'Select';
   @Input() placeholder: string = 'Select an item';
   @Input() suffix?: string = 'search';
   @Input() prefix?: string;
   @Input() hint?: string = 'Click to select an item from list.';
-
   @Input() dataSource!: MatSelectDialogDataSource<any>;
-
   @Input() mode: 'multi' | 'single' = 'single';
 
   @Output() change = new EventEmitter();
+  @Output() page = new EventEmitter<PageEvent>();
+  @Output() filter = new EventEmitter<string>();
+
+  private _pageSub?: Subscription;
+  private _filterSub?: Subscription;
 
   constructor(
     private _selectDialogService: MatSelectDialogService
   ) { }
+
+  ngOnInit(): void {
+    this._pageSub = this._selectDialogService.page.subscribe(p => this.page.emit(p));
+    this._filterSub = this._selectDialogService.filter.subscribe(f => this.filter.emit(f));
+  }
+
+  ngOnDestroy(): void {
+    this._pageSub && this._pageSub.unsubscribe();
+    this._filterSub && this._filterSub.unsubscribe();
+  }
 
   async onInputClick(): Promise<void> {
     await this._selectDialogService.selectFrom(this.dataSource);

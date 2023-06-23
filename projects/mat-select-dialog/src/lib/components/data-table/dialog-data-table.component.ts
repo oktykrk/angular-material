@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectDialogDataSource } from '../../mat-select-dialog.datasource';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
     selector: 'lib-dialog-data-table',
@@ -13,10 +13,15 @@ import { MatPaginator } from '@angular/material/paginator';
 export class DialogDataTableComponent implements AfterViewInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-    private _tableDataSource!: MatTableDataSource<any>;
-    public get tableDataSource(): MatTableDataSource<any> {
-        return this._tableDataSource;
+    @Output() page = new EventEmitter<PageEvent>();
+    @Output() filter = new EventEmitter<string>();
+
+    private _localPagingDataSource!: MatTableDataSource<any>;
+    public get localPagingDataSource(): MatTableDataSource<any> {
+        return this._localPagingDataSource;
     }
+
+    public filterText!: string;
 
     public get data(): Array<any> {
         return this._dataSource.data;
@@ -26,6 +31,9 @@ export class DialogDataTableComponent implements AfterViewInit {
     }
     public get pagingEnabled(): boolean {
         return this._dataSource.pagingEnabled;
+    }
+    public get pagingMode(): 'local' | 'remote' {
+        return this._dataSource.pagingMode;
     }
     public get pageIndex(): number {
         return this._dataSource.pageIndex;
@@ -42,22 +50,29 @@ export class DialogDataTableComponent implements AfterViewInit {
 
     constructor(
         @Inject(MAT_DIALOG_DATA) private _dataSource: MatSelectDialogDataSource<any>
-    ) {
-        this._tableDataSource = new MatTableDataSource<any>(_dataSource.data);
-    }
+    ) { }
 
     ngAfterViewInit(): void {
-        if (this.pagingEnabled && this._dataSource.pagingMode === 'local') {
-            this._tableDataSource.paginator = this.paginator;
+        if (this.pagingEnabled && this.pagingMode === 'local') {
+        this._localPagingDataSource = new MatTableDataSource<any>(this._dataSource.data);
+        this._localPagingDataSource.paginator = this.paginator;
         }
     }
 
     applyFilter(event: Event): void {
-        const filterValue = (event.target as HTMLInputElement).value;
-        this._tableDataSource.filter = filterValue.trim().toLowerCase();
+        this.filterText = (event.target as HTMLInputElement).value;
+        if (this.pagingEnabled && this.pagingMode === 'remote') {
+            this.filter.emit(this.filterText);
+        } else {
+            this._localPagingDataSource.filter = this.filterText.trim().toLowerCase();
 
-        if (this._tableDataSource.paginator) {
-            this._tableDataSource.paginator.firstPage();
+            if (this._localPagingDataSource.paginator) {
+                this._localPagingDataSource.paginator.firstPage();
+            }
         }
+    }
+
+    onPage(e: PageEvent): void {
+        this.page.emit(e);
     }
 }
