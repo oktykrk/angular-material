@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { MatSelectDialogModule } from 'mat-select-dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatSelectDialogModule } from 'mat-select-dialog';
 
 @NgModule({
   declarations: [
@@ -13,7 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
 
     MatSelectDialogModule,
-     BrowserAnimationsModule
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

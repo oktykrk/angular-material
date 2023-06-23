@@ -1,12 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSelectDialogDataSource } from '../../mat-select-dialog.datasource';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
     selector: 'lib-dialog-data-table',
-    templateUrl: 'dialog-data-table.component.html'
+    templateUrl: 'dialog-data-table.component.html',
+    styleUrls: ['dialog-data-table.component.scss']
 })
 
-export class DialogDataTableComponent implements OnInit {
-    constructor() { }
+export class DialogDataTableComponent {
+    private _tableDataSource!: MatTableDataSource<any>;
+    public get tableDataSource(): MatTableDataSource<any> {
+        return this._tableDataSource;
+    }
 
-    ngOnInit() { }
+    public get data(): Array<any> {
+        return this._dataSource.data;
+    }
+    public get displayedColumns(): Array<string> {
+        return this._dataSource.displayedColumns;
+    }
+    public get pagingEnabled(): boolean {
+        return this._dataSource.pagingEnabled;
+    }
+    public get pageIndex(): number {
+        return this._dataSource.pageIndex;
+    }
+    public get pageSize(): number {
+        return this._dataSource.pageSize;
+    }
+    public get pageSizeOptions(): Array<number> {
+        return this._dataSource.pageSizeOptions;
+    }
+    public get totalCount(): number {
+        return this._dataSource.totalCount;
+    }
+
+    constructor(
+        @Inject(MAT_DIALOG_DATA) private _dataSource: MatSelectDialogDataSource<any>
+    ) {
+        this._tableDataSource = new MatTableDataSource<any>(_dataSource.data);
+    }
+
+    applyFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this._tableDataSource.filter = filterValue.trim().toLowerCase();
+
+        if (this._tableDataSource.paginator) {
+            this._tableDataSource.paginator.firstPage();
+        }
+    }
 }

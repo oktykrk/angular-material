@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSelectDialogService } from './mat-select-dialog.service';
+import { DialogDataTableModule } from './components/data-table/dialog-data-table.module';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,9 @@ import { MatSelectDialogService } from './mat-select-dialog.service';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+
+    DialogDataTableModule
   ],
   exports: [
     MatSelectDialogComponent

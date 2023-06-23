@@ -9,7 +9,7 @@ import { MatSelectDialogService } from './mat-select-dialog.service';
   template: `
     <mat-form-field [appearance]="appearance" style="flex: 1">
       <mat-label>{{label}}</mat-label>
-      <input readonly matInput [placeholder]="placeholder" (focus)="onInputFocus()">
+      <input readonly matInput [placeholder]="placeholder" (click)="onInputClick()">
       <mat-icon *ngIf="suffix" matSuffix>{{suffix}}</mat-icon>
       <mat-icon *ngIf="prefix" matPrefix>{{prefix}}</mat-icon>
       <mat-hint *ngIf="hint">{{hint}}</mat-hint>
@@ -40,7 +40,7 @@ export class MatSelectDialogComponent {
     private _selectDialogService: MatSelectDialogService
   ) { }
 
-  async onInputFocus(): Promise<void> {
+  async onInputClick(): Promise<void> {
     await this._selectDialogService.selectFrom(this.dataSource);
   }
 }

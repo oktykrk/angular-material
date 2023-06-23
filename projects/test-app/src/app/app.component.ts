@@ -7,7 +7,61 @@ import { MatSelectDialogDataSource } from 'mat-select-dialog';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  selectDataSource = new MatSelectDialogDataSource([]);
+  selectDataSource = new MatSelectDialogDataSource({
+    data: [{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },{
+      Id: 1,
+      Name: 'Hello'
+    },],
+    displayedColumns: ['Id', 'Name'],
+    paging: {
+      enabled: true
+    }
+  });
 
   title = 'test-app';
 }
