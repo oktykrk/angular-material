@@ -49,6 +49,12 @@ export class MatSelectDialogDataSource<T> {
         return this._data;
     }
 
+    private _prevSelected: Array<T> = [];
+    private _selected: Array<T> = [];
+    public get selected(): Array<T> {
+        return this._selected;
+    }
+
     /**
      *
      */
@@ -75,6 +81,18 @@ export class MatSelectDialogDataSource<T> {
 
     /** */
     public setData(data: Array<T>): void {
-        this._data = data;
+        this._data = [...data];
+        this._selected = [];
+    }
+
+    /** */
+    public setSelected(selected: Array<T>): void {
+        this._selected = selected;
+        this._prevSelected = [...selected];
+    }
+
+    /** */
+    public rollbackSelected(): void {
+        this._selected = [...this._prevSelected];
     }
 }

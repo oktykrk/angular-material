@@ -34,7 +34,8 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
   @Input() dataSource!: MatSelectDialogDataSource<any>;
   @Input() mode: 'multi' | 'single' = 'single';
 
-  @Input() dialogWidth?: string;
+  @Input() dialogWidth?: string = '50vw';
+  @Input() dialogHeight?: string = '50vh';
   @Input() custimizeDisplayText?: (selected: Array<any>) => string;
 
   @Output() done = new EventEmitter<Array<any>>();
@@ -44,9 +45,8 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
   private _pageSub?: Subscription;
   private _filterSub?: Subscription;
 
-  private _displayText: string = '';
   public get displayText(): string {
-    return this._displayText;
+    return this.getDisplayText(this.dataSource.selected);
   }
 
   constructor(
@@ -66,17 +66,17 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
   async onInputClick(): Promise<void> {
     const seledted = await this._selectDialogService.selectFrom(this.dataSource, {
       mode: this.mode,
-      dialogWidth: this.dialogWidth
+      dialogWidth: this.dialogWidth,
+      dialogHeight: this.dialogHeight
     });
-    this.prepareDisplayText(seledted);
     this.done.emit(seledted);
   }
 
-  private prepareDisplayText(selected: Array<any>): void {
+  private getDisplayText(selected: Array<any>): string {
     if (this.custimizeDisplayText) {
-      this._displayText = this.custimizeDisplayText(selected);
+      return this.custimizeDisplayText(selected);
     } else {
-      this._displayText = selected.map(s => s[this.dataSource.displayedColumns[0]]).join(', ');
+      return selected.map(s => s[this.dataSource.displayedColumns[0]]).join(', ');
     }
   }
 }

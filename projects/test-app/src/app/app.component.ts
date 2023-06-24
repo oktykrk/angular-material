@@ -9,14 +9,16 @@ import { MatSelectDialogDataSource } from 'mat-select-dialog';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  selectedItems: Array<any> = [];
   selectDataSource = new MatSelectDialogDataSource<any>({
     data: [],
     displayedColumns: ['id', 'title', 'completed'],
     paging: {
       enabled: true,
-      mode: 'local',
+      mode: 'remote',
       pageSize: 10,
       pageIndex: 0,
+      totalCount: 112
     }
   });
 
@@ -30,6 +32,8 @@ export class AppComponent {
   ) {
     httpClient.get<Array<any>>('https://jsonplaceholder.typicode.com/todos').subscribe(res => {
       this.selectDataSource.setData(res);
+      this.selectDataSource.setSelected(res.filter(d => d.id === 5));
+      this.selectedItems = res;
     })
   }
 
@@ -37,6 +41,7 @@ export class AppComponent {
     this.httpClient.get<Array<any>>('https://jsonplaceholder.typicode.com/todos').subscribe(res => {
       res.splice(0, 100);
       this.selectDataSource.setData(res);
+      // this.selectDataSource.setSelected(res.filter(d => d.id % 6 === 0));
     });
   }
 

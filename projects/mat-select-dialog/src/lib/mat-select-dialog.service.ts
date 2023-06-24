@@ -16,14 +16,16 @@ export class MatSelectDialogService {
 
   public selectFrom(dataSource: MatSelectDialogDataSource<any>, options?: {
     mode?: 'single' | 'multi',
-    dialogWidth?: string
+    dialogWidth?: string,
+    dialogHeight?: string,
   }): Promise<Array<any>> {
     return new Promise<Array<any>>((resolve, reject) => {
       const ref = this._dialog.open(DialogDataTableComponent, {
-        data: dataSource,
-        width: options?.dialogWidth
+        width: options?.dialogWidth,
+        height: options?.dialogHeight
       });
 
+      ref.componentInstance.dataSource = dataSource;
       ref.componentInstance.selectMode = options?.mode || 'single';
 
       const pageSub = ref.componentInstance.page.subscribe(p => this.page.emit(p));
@@ -32,15 +34,15 @@ export class MatSelectDialogService {
         resolve(s);
         ref.close();
       });
-      const closeDialogSub = ref.componentInstance.close.subscribe(() => ref.close());
+      const cancelSub = ref.componentInstance.cancel.subscribe(() => ref.close());
 
       const closeSub = ref.beforeClosed().subscribe(() => {
         pageSub.unsubscribe();
         filterSub.unsubscribe();
         doneSub.unsubscribe();
-        closeDialogSub.unsubscribe();
+        cancelSub.unsubscribe();
         closeSub.unsubscribe();
-      })
+      });
     });
   }
 

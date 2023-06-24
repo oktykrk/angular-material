@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Inject, Output, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AfterViewInit, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { MatSelectDialogDataSource } from '../../mat-select-dialog.datasource';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
@@ -14,64 +13,37 @@ export class DialogDataTableComponent implements AfterViewInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
     @Output() done = new EventEmitter<Array<any>>();
-    @Output() close = new EventEmitter();
+    @Output() cancel = new EventEmitter();
     @Output() page = new EventEmitter<PageEvent>();
     @Output() filter = new EventEmitter<string>();
 
     public selectMode: 'single' | 'multi' = 'single';
 
-    private _selectedRows: Array<any> = [];
     public get selectedRows(): Array<any> {
-        return this._selectedRows;
+        return this._dataSource.selected;
     }
 
-    private _localPagingDataSource!: MatTableDataSource<any>;
-    public get localPagingDataSource(): MatTableDataSource<any> {
-        return this._localPagingDataSource;
+    private _tableDataSource!: MatTableDataSource<any>;
+    public get tableDataSource(): MatTableDataSource<any> {
+        return this._tableDataSource;
     }
 
     public filterText!: string;
 
-    public get data(): Array<any> {
-        return this._dataSource.data;
-    }
-    public get displayedColumns(): Array<string> {
-        return this._dataSource.displayedColumns;
-    }
-    public get pagingEnabled(): boolean {
-        return this._dataSource.pagingEnabled;
-    }
-    public get showPageSize(): boolean {
-        return this._dataSource.showPageSize;
-    }
-    public get pagingMode(): 'local' | 'remote' {
-        return this._dataSource.pagingMode;
-    }
-    public get pageIndex(): number {
-        return this._dataSource.pageIndex;
-    }
-    public get pageSize(): number {
-        return this._dataSource.pageSize;
-    }
-    public get pageSizeOptions(): Array<number> {
-        return this._dataSource.pageSizeOptions;
-    }
-    public get totalCount(): number {
-        return this._dataSource.totalCount;
-    }
-
-    constructor(
-        @Inject(MAT_DIALOG_DATA) private _dataSource: MatSelectDialogDataSource<any>
-    ) {
-        if (this.pagingEnabled && this.pagingMode === 'local') {
-            this._localPagingDataSource = new MatTableDataSource<any>(this._dataSource.data);
-        }
+    private _dataSource!: MatSelectDialogDataSource<any>;
+    public get dataSource(): MatSelectDialogDataSource<any> {
+        return this._dataSource;
+    } public set dataSource(v: MatSelectDialogDataSource<any>) {
+        this._dataSource = v;
     }
 
     ngAfterViewInit(): void {
-        if (this.pagingEnabled && this.pagingMode === 'local') {
-            this._localPagingDataSource.paginator = this.paginator;
-        }
+        setTimeout(() => {
+            if (this._dataSource.pagingEnabled && this._dataSource.pagingMode === 'local') {
+                this._tableDataSource = new MatTableDataSource(this._dataSource.data);
+                this._tableDataSource.paginator = this.paginator;
+            }
+        }, 10);
     }
 
     private _filterEmitterAntiFloodTimeout: any = undefined;
@@ -90,11 +62,11 @@ export class DialogDataTableComponent implements AfterViewInit {
             this._filterEmitterAntiFloodTimeout = undefined;
         }, 200);
 
-        if (!this.pagingEnabled || this.pagingMode === 'local') {
-            this._localPagingDataSource.filter = this.filterText.trim().toLowerCase();
+        if (!this._dataSource.pagingEnabled || this._dataSource.pagingMode === 'local') {
+            this._tableDataSource.filter = this.filterText.trim().toLowerCase();
 
-            if (this._localPagingDataSource.paginator) {
-                this._localPagingDataSource.paginator.firstPage();
+            if (this._tableDataSource.paginator) {
+                this._tableDataSource.paginator.firstPage();
             }
         }
     }
@@ -104,15 +76,20 @@ export class DialogDataTableComponent implements AfterViewInit {
     }
 
     onRowClick(element: any): void {
-        if (this.selectMode === 'single') {
-            this._selectedRows = [element];
-        } else {
-            const idx = this._selectedRows.indexOf(element);
-            if (idx > -1) {
-                this._selectedRows.splice(idx, 1);
-            } else {
-                this._selectedRows.push(element);
-            }
+        const idx = this._dataSource.selected.indexOf(element);
+        if (idx > -1) {
+            this._dataSource.selected.splice(idx, 1);
+            return;
         }
+
+        if (this.selectMode === 'single') {
+            this._dataSource.selected.length = 0;
+        }
+        this._dataSource.selected.push(element);
+    }
+
+    onCancelClick(): void {
+        this._dataSource.rollbackSelected();
+        this.cancel.emit();
     }
 }
