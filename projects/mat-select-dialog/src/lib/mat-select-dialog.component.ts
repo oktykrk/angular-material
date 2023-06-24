@@ -36,7 +36,7 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
 
   @Input() dialogWidth?: string;
 
-  @Output() change = new EventEmitter();
+  @Output() done = new EventEmitter<Array<any>>();
   @Output() page = new EventEmitter<PageEvent>();
   @Output() filter = new EventEmitter<string>();
 
@@ -58,9 +58,10 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
   }
 
   async onInputClick(): Promise<void> {
-    await this._selectDialogService.selectFrom(this.dataSource, {
+    const seledted = await this._selectDialogService.selectFrom(this.dataSource, {
       mode: this.mode,
       dialogWidth: this.dialogWidth
     });
+    this.done.emit(seledted);
   }
 }

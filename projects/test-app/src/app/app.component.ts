@@ -16,9 +16,7 @@ export class AppComponent {
       enabled: true,
       mode: 'local',
       pageSize: 10,
-      pageSizeOptions: [5, 10, 15],
       pageIndex: 0,
-      totalCount: 150
     }
   });
 
@@ -36,14 +34,18 @@ export class AppComponent {
 
   }
 
-  onPage(e: PageEvent) {
+  onPage(e: PageEvent): void {
     this.httpClient.get<Array<any>>('https://jsonplaceholder.typicode.com/todos').subscribe(res => {
       res.splice(0, 100);
       this.selectDataSource.setData(res);
     });
   }
 
-  onFilter(f: string) {
+  onFilter(f: string): void {
     console.log(f);
+  }
+
+  onDone(selected: Array<any>): void {
+    console.log(selected);
   }
 }

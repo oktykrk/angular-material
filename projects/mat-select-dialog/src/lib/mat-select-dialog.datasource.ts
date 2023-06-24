@@ -4,6 +4,7 @@ interface IMatSelectDialogDataSourceOptions<T> {
     paging?: {
         enabled?: boolean,
         mode?: 'local' | 'remote',
+        showPageSize?: boolean,
         pageSizeOptions?: Array<number>,
         pageIndex?: number,
         pageSize?: number,
@@ -30,6 +31,10 @@ export class MatSelectDialogDataSource<T> {
     private _pageSizeOptions: Array<number> = [5, 10, 15];
     public get pageSizeOptions(): Array<number> {
         return this._pageSizeOptions;
+    }
+    private _showPageSize: boolean = false;
+    public get showPageSize(): boolean {
+        return this._showPageSize;
     }
     private _totalCount: number = 10;
     public get totalCount(): number {
@@ -61,6 +66,7 @@ export class MatSelectDialogDataSource<T> {
                 this._pageIndex = options.paging.pageIndex || this._pageIndex;
                 this._pageSizeOptions = options.paging.pageSizeOptions || this._pageSizeOptions;
                 this._pageSize = options.paging.pageSize || this._pageSize;
+                this._showPageSize = options.paging.showPageSize || this._showPageSize;
 
                 this._totalCount = options.paging.mode === 'remote' ? options.paging.totalCount || 0 : options.data.length;
             }

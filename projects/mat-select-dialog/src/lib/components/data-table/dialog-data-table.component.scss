@@ -3,9 +3,13 @@
 
   min-width: 30rem;
 
-  max-width: 75vh;
-  max-height: 75vh;
+  max-width: 75vw;
+  max-height: 65vh;
   overflow: auto;
+}
+
+::ng-deep .mat-mdc-paginator-page-size-label {
+  display: none;
 }
 
 ::ng-deep .mat-mdc-form-field-subscript-wrapper {

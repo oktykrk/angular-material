@@ -20,9 +20,15 @@
 
     <ng-container matColumnDef="paginator__">
         <th mat-footer-cell *matFooterCellDef [attr.colspan]="displayedColumns.length">
-            <div>
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <div style="padding-left: .5rem;">
+                    <button mat-raised-button color="primary" (click)="done.emit(selectedRows)">Done</button>
+                    <span style="margin: .25rem;"></span>
+                    <button mat-button (click)="close.emit()">Close</button>
+                </div>
+                <div style="flex: 1;"></div>
                 <mat-paginator #paginator [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-                    [length]="totalCount" (page)="onPage($event)"></mat-paginator>
+                    [length]="totalCount" (page)="onPage($event)" [hidePageSize]="!showPageSize"></mat-paginator>
             </div>
         </th>
     </ng-container>

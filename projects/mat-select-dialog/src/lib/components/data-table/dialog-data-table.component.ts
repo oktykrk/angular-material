@@ -13,6 +13,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 export class DialogDataTableComponent implements AfterViewInit {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+    @Output() done = new EventEmitter<Array<any>>();
+    @Output() close = new EventEmitter();
     @Output() page = new EventEmitter<PageEvent>();
     @Output() filter = new EventEmitter<string>();
 
@@ -38,6 +40,9 @@ export class DialogDataTableComponent implements AfterViewInit {
     }
     public get pagingEnabled(): boolean {
         return this._dataSource.pagingEnabled;
+    }
+    public get showPageSize(): boolean {
+        return this._dataSource.showPageSize;
     }
     public get pagingMode(): 'local' | 'remote' {
         return this._dataSource.pagingMode;
