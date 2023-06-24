@@ -92,4 +92,8 @@ export class DialogDataTableComponent implements AfterViewInit {
         this._dataSource.rollbackSelected();
         this.cancel.emit();
     }
+
+    onClearClick(): void {
+        this._dataSource.selected.length = 0;
+    }
 }
