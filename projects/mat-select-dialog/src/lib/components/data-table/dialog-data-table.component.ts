@@ -114,9 +114,5 @@ export class DialogDataTableComponent implements AfterViewInit {
                 this._selectedRows.push(element);
             }
         }
-
-        console.log(this._selectedRows)
     }
-
-    
 }

@@ -11,7 +11,7 @@ import { PageEvent } from '@angular/material/paginator';
   template: `
     <mat-form-field [appearance]="appearance" style="flex: 1" (click)="onInputClick()">
       <mat-label>{{label}}</mat-label>
-      <input readonly matInput [placeholder]="placeholder">
+      <input readonly matInput [placeholder]="placeholder" [value]="displayText">
       <mat-icon *ngIf="suffix" matSuffix>{{suffix}}</mat-icon>
       <mat-icon *ngIf="prefix" matPrefix>{{prefix}}</mat-icon>
       <mat-hint *ngIf="hint">{{hint}}</mat-hint>
@@ -35,6 +35,7 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
   @Input() mode: 'multi' | 'single' = 'single';
 
   @Input() dialogWidth?: string;
+  @Input() custimizeDisplayText?: (selected: Array<any>) => string;
 
   @Output() done = new EventEmitter<Array<any>>();
   @Output() page = new EventEmitter<PageEvent>();
@@ -42,6 +43,11 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
 
   private _pageSub?: Subscription;
   private _filterSub?: Subscription;
+
+  private _displayText: string = '';
+  public get displayText(): string {
+    return this._displayText;
+  }
 
   constructor(
     private _selectDialogService: MatSelectDialogService
@@ -62,6 +68,15 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
       mode: this.mode,
       dialogWidth: this.dialogWidth
     });
+    this.prepareDisplayText(seledted);
     this.done.emit(seledted);
+  }
+
+  private prepareDisplayText(selected: Array<any>): void {
+    if (this.custimizeDisplayText) {
+      this._displayText = this.custimizeDisplayText(selected);
+    } else {
+      this._displayText = selected.map(s => s[this.dataSource.displayedColumns[0]]).join(', ');
+    }
   }
 }

@@ -31,7 +31,6 @@ export class AppComponent {
     httpClient.get<Array<any>>('https://jsonplaceholder.typicode.com/todos').subscribe(res => {
       this.selectDataSource.setData(res);
     })
-
   }
 
   onPage(e: PageEvent): void {
@@ -47,5 +46,9 @@ export class AppComponent {
 
   onDone(selected: Array<any>): void {
     console.log(selected);
+  }
+
+  custimizeDisplayText(selected: Array<{title: string}>): string {
+    return selected.map(s => s.title).join(', ');
   }
 }
