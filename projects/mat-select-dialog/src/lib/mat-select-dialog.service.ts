@@ -23,7 +23,7 @@ export class MatSelectDialogService {
     return new Promise<Array<any>>((resolve, reject) => {
       const ref = this._dialog.open(DialogDataTableComponent, {
         width: options?.dialogWidth,
-        maxWidth: options?.dialogWidth,
+        maxWidth: options?.dialogMaxWidth,
         maxHeight: options?.dialogMaxHeight
       });
 
