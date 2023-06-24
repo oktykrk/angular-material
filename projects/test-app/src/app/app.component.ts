@@ -52,7 +52,7 @@ export class AppComponent {
     console.log(selected);
   }
 
-  custimizeDisplayText(selected: Array<{title: string}>): string {
+  customizeDisplayText(selected: Array<{title: string}>): string {
     return selected.map(s => s.title).join(', ');
   }
 }

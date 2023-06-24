@@ -37,7 +37,7 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
   @Input() dialogWidth?: string = '50vw';
   @Input() dialogMaxHeight?: string = '50vh';
   @Input() dialogMaxWidth?: string = '80vw';
-  @Input() custimizeDisplayText?: (selected: Array<any>) => string;
+  @Input() customizeDisplayText?: (selected: Array<any>) => string;
 
   @Output() done = new EventEmitter<Array<any>>();
   @Output() page = new EventEmitter<PageEvent>();
@@ -75,8 +75,8 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
   }
 
   private getDisplayText(selected: Array<any>): string {
-    if (this.custimizeDisplayText) {
-      return this.custimizeDisplayText(selected);
+    if (this.customizeDisplayText) {
+      return this.customizeDisplayText(selected);
     } else {
       return selected.map(s => s[this.dataSource.displayedColumns[0]]).join(', ');
     }
