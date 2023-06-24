@@ -1,24 +1,95 @@
 # MatSelectDialog
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.0.
+A ready to use component that promotes data select functionality from a material table with dialog.
 
-## Code scaffolding
+![alt text](https://github.com/oktykrk/angular-material/blob/main/images/3.png?raw=true)
 
-Run `ng generate component component-name --project mat-select-dialog` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project mat-select-dialog`.
-> Note: Don't forget to add `--project mat-select-dialog` or else it will be added to the default project in your `angular.json` file. 
+- `single` or `multi` selection modes.
+- `pagination` supporting local/remote data fetch.
 
-## Build
+![alt text](https://github.com/oktykrk/angular-material/blob/main/images/4.png?raw=true)
 
-Run `ng build mat-select-dialog` to build the project. The build artifacts will be stored in the `dist/` directory.
+- respective to your `material theme` customization.
+- easy to use !!!!
 
-## Publishing
+```
+import { MatSelectDialogModule } from 'ngx-mat-select-dialog';
+```
 
-After building your library with `ng build mat-select-dialog`, go to the dist folder `cd dist/mat-select-dialog` and run `npm publish`.
+```
+imports: [
+    MatSelectDialogModule,
+],
+```
 
-## Running unit tests
+```
+<mat-select-dialog 
+    [dataSource]="selectDataSource" 
+    (page)="onPage($event)" 
+    (filter)="onFilter($event)" 
+    (done)="onDone($event)" 
+    [dialogWidth]="'640px'" 
+    [mode]="'multi'" 
+    [custimizeDisplayText]="custimizeDisplayText"
+></mat-select-dialog>
+```
+Example:
+```
+import { HttpClient } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
+import { MatSelectDialogDataSource } from 'mat-select-dialog';
 
-Run `ng test mat-select-dialog` to execute the unit tests via [Karma](https://karma-runner.github.io).
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent {
+  selectedItems: Array<any> = [];
+  selectDataSource = new MatSelectDialogDataSource<any>({
+    data: [],
+    displayedColumns: ['id', 'title', 'completed'],
+    paging: {
+      enabled: true,
+      mode: 'local',
+      pageSize: 10,
+      pageIndex: 0
+    }
+  });
 
-## Further help
+  title = 'test-app';
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+  /**
+   *
+   */
+  constructor(
+    private httpClient: HttpClient
+  ) {
+    httpClient.get<Array<any>>('https://jsonplaceholder.typicode.com/todos').subscribe(res => {
+      this.selectDataSource.setData(res);
+      this.selectedItems = res;
+    })
+  }
+
+  onPage(e: PageEvent): void {
+    this.httpClient.get<Array<any>>('https://jsonplaceholder.typicode.com/todos').subscribe(res => {
+      res.splice(0, 100);
+      this.selectDataSource.setData(res);
+    });
+  }
+
+  onFilter(f: string): void {
+    console.log(f);
+  }
+
+  onDone(selected: Array<any>): void {
+    console.log(selected);
+  }
+
+  custimizeDisplayText(selected: Array<{title: string}>): string {
+    return selected.map(s => s.title).join(', ');
+  }
+}
+
+```
