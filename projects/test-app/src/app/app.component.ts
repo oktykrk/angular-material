@@ -31,7 +31,7 @@ export class AppComponent {
   ) {
     httpClient.get<Array<any>>('https://jsonplaceholder.typicode.com/todos').subscribe(res => {
       this.selectDataSource.setData(res);
-      this.selectDataSource.setSelected(res.filter(d => d.id % 10 === 5));
+      // this.selectDataSource.setSelected(res.filter(d => d.id % 10 === 5));
       this.selectedItems = res;
     })
   }
@@ -40,7 +40,7 @@ export class AppComponent {
     this.httpClient.get<Array<any>>('https://jsonplaceholder.typicode.com/todos').subscribe(res => {
       res.splice(0, 100);
       this.selectDataSource.setData(res);
-      this.selectDataSource.setSelected(res.filter(d => d.id % 6 === 0));
+      // this.selectDataSource.setSelected(res.filter(d => d.id % 6 === 0));
     });
   }
 

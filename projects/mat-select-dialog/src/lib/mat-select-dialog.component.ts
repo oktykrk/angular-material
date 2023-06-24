@@ -35,7 +35,8 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
   @Input() mode: 'multi' | 'single' = 'single';
 
   @Input() dialogWidth?: string = '50vw';
-  @Input() dialogHeight?: string = '50vh';
+  @Input() dialogMaxHeight?: string = '50vh';
+  @Input() dialogMaxWidth?: string = '80vw';
   @Input() custimizeDisplayText?: (selected: Array<any>) => string;
 
   @Output() done = new EventEmitter<Array<any>>();
@@ -67,7 +68,8 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
     const seledted = await this._selectDialogService.selectFrom(this.dataSource, {
       mode: this.mode,
       dialogWidth: this.dialogWidth,
-      dialogHeight: this.dialogHeight
+      dialogMaxHeight: this.dialogMaxHeight,
+      dialogMaxWidth: this.dialogMaxWidth
     });
     this.done.emit(seledted);
   }

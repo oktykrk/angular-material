@@ -17,12 +17,14 @@ export class MatSelectDialogService {
   public selectFrom(dataSource: MatSelectDialogDataSource<any>, options?: {
     mode?: 'single' | 'multi',
     dialogWidth?: string,
-    dialogHeight?: string,
+    dialogMaxWidth?: string,
+    dialogMaxHeight?: string,
   }): Promise<Array<any>> {
     return new Promise<Array<any>>((resolve, reject) => {
       const ref = this._dialog.open(DialogDataTableComponent, {
         width: options?.dialogWidth,
-        height: options?.dialogHeight
+        maxWidth: options?.dialogWidth,
+        maxHeight: options?.dialogMaxHeight
       });
 
       ref.componentInstance.dataSource = dataSource;
