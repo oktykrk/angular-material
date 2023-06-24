@@ -15,6 +15,7 @@ export class MatSelectDialogService {
   ) { }
 
   public selectFrom(dataSource: MatSelectDialogDataSource<any>, options?: {
+    mode?: 'single' | 'multi',
     dialogWidth?: string
   }): Promise<void> {
     return new Promise<void>((resolve, reject) => {
@@ -24,6 +25,8 @@ export class MatSelectDialogService {
         data: dataSource,
         width: options?.dialogWidth
       });
+
+      ref.componentInstance.selectMode = options?.mode || 'single';
 
       const pageSub = ref.componentInstance.page.subscribe(p => this.page.emit(p));
       const filterSub = ref.componentInstance.filter.subscribe(f => this.filter.emit(f));

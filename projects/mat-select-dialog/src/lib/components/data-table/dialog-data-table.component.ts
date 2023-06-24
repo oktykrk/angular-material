@@ -16,6 +16,13 @@ export class DialogDataTableComponent implements AfterViewInit {
     @Output() page = new EventEmitter<PageEvent>();
     @Output() filter = new EventEmitter<string>();
 
+    public selectMode: 'single' | 'multi' = 'single';
+
+    private _selectedRows: Array<any> = [];
+    public get selectedRows(): Array<any> {
+        return this._selectedRows;
+    }
+
     private _localPagingDataSource!: MatTableDataSource<any>;
     public get localPagingDataSource(): MatTableDataSource<any> {
         return this._localPagingDataSource;
@@ -90,4 +97,21 @@ export class DialogDataTableComponent implements AfterViewInit {
     onPage(e: PageEvent): void {
         this.page.emit(e);
     }
+
+    onRowClick(element: any): void {
+        if (this.selectMode === 'single') {
+            this._selectedRows = [element];
+        } else {
+            const idx = this._selectedRows.indexOf(element);
+            if (idx > -1) {
+                this._selectedRows.splice(idx, 1);
+            } else {
+                this._selectedRows.push(element);
+            }
+        }
+
+        console.log(this._selectedRows)
+    }
+
+    
 }

@@ -59,6 +59,7 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
 
   async onInputClick(): Promise<void> {
     await this._selectDialogService.selectFrom(this.dataSource, {
+      mode: this.mode,
       dialogWidth: this.dialogWidth
     });
   }
