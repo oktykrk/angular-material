@@ -34,6 +34,8 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
   @Input() dataSource!: MatSelectDialogDataSource<any>;
   @Input() mode: 'multi' | 'single' = 'single';
 
+  @Input() dialogWidth?: string;
+
   @Output() change = new EventEmitter();
   @Output() page = new EventEmitter<PageEvent>();
   @Output() filter = new EventEmitter<string>();
@@ -56,6 +58,8 @@ export class MatSelectDialogComponent implements OnInit, OnDestroy {
   }
 
   async onInputClick(): Promise<void> {
-    await this._selectDialogService.selectFrom(this.dataSource);
+    await this._selectDialogService.selectFrom(this.dataSource, {
+      dialogWidth: this.dialogWidth
+    });
   }
 }

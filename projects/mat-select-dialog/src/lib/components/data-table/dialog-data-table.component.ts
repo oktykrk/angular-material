@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Inject, Output, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSelectDialogDataSource } from '../../mat-select-dialog.datasource';
 import { MatTableDataSource } from '@angular/material/table';
@@ -71,7 +71,7 @@ export class DialogDataTableComponent implements AfterViewInit {
             clearTimeout(this._filterEmitterAntiFloodTimeout);
         }
         this._filterEmitterAntiFloodTimeout = setTimeout(() => {
-            
+
             this.filter.emit(this.filterText);
 
             clearTimeout(this._filterEmitterAntiFloodTimeout);

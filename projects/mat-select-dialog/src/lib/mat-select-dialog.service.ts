@@ -14,12 +14,15 @@ export class MatSelectDialogService {
     private _dialog: MatDialog
   ) { }
 
-  public selectFrom(dataSource: MatSelectDialogDataSource<any>): Promise<void> {
+  public selectFrom(dataSource: MatSelectDialogDataSource<any>, options?: {
+    dialogWidth?: string
+  }): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       resolve();
 
       const ref = this._dialog.open(DialogDataTableComponent, {
-        data: dataSource
+        data: dataSource,
+        width: options?.dialogWidth
       });
 
       const pageSub = ref.componentInstance.page.subscribe(p => this.page.emit(p));
